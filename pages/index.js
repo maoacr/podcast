@@ -17,10 +17,12 @@ export default class extends React.Component {
 
       <div className="channels">
         { channels.map((channel) => (
-          <a className="channel" key={ channel.id }>
-            <img src={ channel.urls.logo_image.original } alt=""/>
-            <h2>{ channel.title }</h2>
-          </a>
+          <Link href={`/channel?id=${channel.id}`} prefetch key={ channel.id }>
+            <a className="channel">
+              <img src={ channel.urls.logo_image.original } alt=""/>
+              <h2>{ channel.title }</h2>
+            </a>
+          </Link>
         )) }
       </div>
 
