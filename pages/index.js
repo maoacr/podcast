@@ -1,34 +1,69 @@
-import React from 'react'
+import 'isomorphic-fetch'
+import Link from 'next/link'
 
 export default class extends React.Component {
-	render() {
-		return <div>
 
-		<h1>Hola platzi !</h1>
-		<p>Bienvenidos al curso de Next Js</p>
+  static async getInitialProps() {
+    let req = await fetch('https://api.audioboom.com/channels/recommended')
+    let { body: channels } = await req.json()
+    return { channels }
+  }
 
-		<img src='./platzi-logo.png' alt='Platzi'/>
+  render() {
+    const { channels } = this.props
 
-		<style jsx>{`
-			h1 {
-				color: red;
-			}
-			p {
-				color: green;
-			}
-			img {
-				max-width: 50%;
-				display: block;
-				margin: 0 auto;
-			}
-		`}</style>
+    return <div>
+      <header>Podcasts</header>
 
-		<style jsx global>{`
-			body {
-				background: black;
-			}
-		`}</style>
+      <div className="channels">
+        { channels.map((channel) => (
+          <a className="channel" key={ channel.id }>
+            <img src={ channel.urls.logo_image.original } alt=""/>
+            <h2>{ channel.title }</h2>
+          </a>
+        )) }
+      </div>
 
-		</div>
-	}
+      <style jsx>{`
+        header {
+          color: #fff;
+          background: #8756ca;
+          padding: 15px;
+          text-align: center;
+        }
+        .channels {
+          display: grid;
+          grid-gap: 15px;
+          padding: 15px;
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        }
+        a.channel {
+          display: block;
+          margin-bottom: 0.5em;
+          color: #333;
+          text-decoration: none;
+        }
+        .channel img {
+          border-radius: 3px;
+          box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+          width: 100%;
+        }
+        h2 {
+          padding: 5px;
+          font-size: 0.9em;
+          font-weight: 600;
+          margin: 0;
+          text-align: center;
+        }
+      `}</style>
+
+      <style jsx global>{`
+        body {
+          margin: 0;
+          font-family: system-ui;
+          background: white;
+        }
+      `}</style>
+    </div>
+  }
 }
